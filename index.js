@@ -2,20 +2,50 @@ const express = require("express") // impor modul express
 const app = express() // inisialisasi express
 const port = 3000 // port
 
+app.set('view engine', 'ejs');
+
 // route/
 app.get("/", (req,res) => {
-    res.sendFile(__dirname + "/index.html");
+   // res.sendFile(__dirname + "/index.html");
+
+   const berita =[
+    {
+        judul : "Berita 1",
+        isi : "Isi Berita 1"
+    },
+    {
+        judul : "Berita 2",
+        isi : "Isi Berita 2"
+    },
+   ];
+   res.render('index', {title: 'Halaman Home', berita});
 })
 
 //route/about
 app.get("/about", (req, res)=>{
-    res.sendFile(__dirname + "/about.html");
+    //res.sendFile(__dirname + "/about.html");
+    res.render('about',  {title: 'Halaman About'});
 });
 
 //route/contact
 app.get("/contact", (req, res)=>{
-    res.sendFile(__dirname + "/contact.html");
+    //res.sendFile(__dirname + "/contact.html");
+    res.render('contact', {title: 'Halaman Contact'});
 });
+
+app.get("/prodi", (req, res) => {
+    const prodis = [
+        { nama: "Sistem Informasi", fakultas: "FIKR", singkatan: "SI" },
+        { nama: "Informatika", fakultas: "FIKR", singkatan: "IF" },
+        { nama: "Teknik Elektro", fakultas: "FT", singkatan: "TE" },
+        { nama: "Manajemen Informatika", fakultas: "FIKR", singkatan: "MI" },
+        { nama: "Manajemen", fakultas: "FEB", singkatan: "MJ" },
+        { nama: "Akuntansi", fakultas: "FEB", singkatan: "AK" }
+    ];
+    
+    res.render('prodi', { title: 'Halaman Prodi', prodis });
+});
+
 
 // route /mahasiswa
 app.get("/mahasiswa", (req, res) => {
