@@ -1,11 +1,16 @@
 const express = require("express") // impor modul express
 const app = express() // inisialisasi express
-const port = 3000 // port
+const expressLayout = require("express-ejs-layouts"); // input modul express-ejs-layouts
+const port = 3000;// port
 
-app.set('view engine', 'ejs');
+app.set("views", __dirname +"/views");
+app.set("view engine", "ejs");
+
+app.use(expressLayout);
+app.use(express.static("public"));
 
 // route/
-app.get("/", (req,res) => {
+app.get("/home", (req,res) => {
    // res.sendFile(__dirname + "/index.html");
 
    const berita =[
@@ -18,19 +23,19 @@ app.get("/", (req,res) => {
         isi : "Isi Berita 2"
     },
    ];
-   res.render('index', {title: 'Halaman Home', berita});
+   res.render('index', {title: 'Halaman Home', berita,  layout:'main'});
 })
 
 //route/about
 app.get("/about", (req, res)=>{
     //res.sendFile(__dirname + "/about.html");
-    res.render('about',  {title: 'Halaman About'});
+    res.render('about',  {title: 'Halaman About', layout:'main'});
 });
 
 //route/contact
 app.get("/contact", (req, res)=>{
     //res.sendFile(__dirname + "/contact.html");
-    res.render('contact', {title: 'Halaman Contact'});
+    res.render('contact', {title: 'Halaman Contact', layout:'main'});
 });
 
 app.get("/prodi", (req, res) => {
@@ -43,7 +48,7 @@ app.get("/prodi", (req, res) => {
         { nama: "Akuntansi", fakultas: "FEB", singkatan: "AK" }
     ];
     
-    res.render('prodi', { title: 'Halaman Prodi', prodis });
+    res.render('prodi', { title: 'Halaman Prodi', prodis, layout:'main'});
 });
 
 
