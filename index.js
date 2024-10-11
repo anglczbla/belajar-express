@@ -49,7 +49,7 @@ app.get("/prodi", (req, res) => {
     ];
     
     res.render('prodi', { title: 'Halaman Prodi', prodis, layout:'main'});
-});
+})
 
 
 // route /mahasiswa
