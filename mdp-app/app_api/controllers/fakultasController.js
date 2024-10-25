@@ -29,7 +29,7 @@ const getFakultasById = async (req, res) => {
 
 const createFakultas = async (req, res) => {
     // membuat instance fakultas baru dari data yang diterima
-    const Fakultas = new Fakultas({
+    const fakultas = new Fakultas({
         nama: req.body.nama,
         singkatan: req.body.singkatan,
     });

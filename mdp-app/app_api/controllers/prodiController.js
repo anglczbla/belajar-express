@@ -3,7 +3,7 @@ const Prodi = require("../models/prodi");
 const getAllProdi = async (req, res) => {
     try {
         // mengambil semua prodi dari database
-        const prodi = await Prodi.find();
+        const prodi = await Prodi.find().populate("fakultas_id","nama singkatan");
         // mengirim respon dengan status 200 dan data prodi
         res.status(200).json(prodi);
     } catch (err) {
@@ -32,6 +32,7 @@ const createProdi = async (req, res) => {
     const prodi = new Prodi({
         nama: req.body.nama,
         singkatan: req.body.singkatan,
+        fakultas_id: req.body.fakultas_id,
     });
 
     try {
@@ -61,6 +62,10 @@ const updateProdi = async (req, res) => {
         // memperbarui singkatan prodi jika ada di request body
         if (req.body.singkatan != null) {
             prodi.singkatan = req.body.singkatan;
+        }
+
+        if (req.body.fakultas_id != null){
+            prodi.fakultas_id = req.body.fakultas_id;
         }
 
         // menyimpan perubahan ke database

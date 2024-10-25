@@ -16,6 +16,12 @@ const prodiSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    fakultas_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Fakultas",
+        required: true,  
+    },
+    
     // field untuk menyimpan tanggal pembuatan data prodi
     createdAt: {
         type: Date,
