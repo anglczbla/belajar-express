@@ -14,6 +14,9 @@ const prodiRouter = require('./app_server/routes/prodi');
 
 const fakultasRouterapi = require("./app_api/routes/fakultas");
 const prodiRouterapi = require("./app_api/routes/prodi");
+const authRouterApi = require("./app_api/routes/auth")
+
+require("dotenv").config();
 
 var app = express();
 
@@ -27,14 +30,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayout);
-app.use(cors());
+app.use(cors()); // gunakan middleware cors
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/fakultas", fakultasRouter);
 app.use('/prodi', prodiRouter);
+
+//API
 app.use("/api/fakultas", fakultasRouterApi);
 app.use("/api/prodi", prodiRouterapi);
+app.use("/api/auth", authRouterApi);
 
 // connect to mongoDB
 connectDB();
