@@ -8,7 +8,7 @@ const fakultasController = require("../controllers/fakultasController");
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
-router.get("/", authMiddleware, fakultasController.getAllFakultas);
+router.get("/", fakultasController.getAllFakultas);
 
 router.post("/", authMiddleware, roleMiddleware,('admin'), fakultasController.createFakultas);
 
