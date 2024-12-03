@@ -11,7 +11,7 @@
     Tambah Prodi
   </button>
 
-  <!-- Modal Tambah Prodi -->
+  <!-- Modal Tambah Fakultas -->
   <div
     class="modal fade"
     id="tambahProdiModal"
@@ -33,7 +33,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <form [formGroup]="ProdiForm" (ngSubmit)="addProdi()">
+          <form [formGroup]="prodiForm" (ngSubmit)="addProdi()">
             <div class="mb-3">
               <label for="nama" class="form-label">Nama Prodi</label>
               <input
@@ -44,12 +44,21 @@
               />
             </div>
             <div class="mb-3">
-              <label for="singkatan" class="form-label">Singkatan</label>
+              <label for="prodi" class="form-label">Singkatan</label>
               <input
                 id="singkatan"
                 type="text"
                 class="form-control"
                 formControlName="singkatan"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="fakultas" class="form-label">Fakultas</label>
+              <input
+                id="fakultas"
+                type="text"
+                class="form-control"
+                formControlName="fakultas"
               />
             </div>
             <button
@@ -65,19 +74,23 @@
     </div>
   </div>
 
-  <!-- Data Prodi -->
+  <!-- Data Fakultas -->
   <table class="table table-bordered table-striped" *ngIf="!isLoading">
     <thead>
       <tr>
         <th>Nama</th>
         <th>Singkatan</th>
+        <th>Fakultas</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of Prodi">
+      <tr *ngFor="let item of prodi">
         <td>{{ item.nama }}</td>
         <td>{{ item.singkatan }}</td>
+        <td>{{ item.fakultas_id.nama }}</td>
       </tr>
     </tbody>
   </table>
 </div>
+
+  

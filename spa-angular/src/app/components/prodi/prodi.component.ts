@@ -5,15 +5,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';  /
 import * as bootstrap from 'bootstrap';
 
 @Component({
-  selector: 'app-prodi',  // Nama selector untuk komponen ini. Komponen akan digunakan di template dengan tag <app-prodi></app-prodi>
+  selector: 'app-prodi',  // Nama selector untuk komponen ini. Komponen akan digunakan di template dengan tag <app-fakultas></app-fakultas>
   standalone: true,  // Menyatakan bahwa komponen ini adalah komponen standalone dan tidak membutuhkan module tambahan
   imports: [CommonModule, ReactiveFormsModule],  // Mengimpor CommonModule untuk memungkinkan penggunaan direktif Angular standar seperti *ngIf dan *ngFor di template
   templateUrl: './prodi.component.html',  // Path ke file template HTML untuk komponen ini
   styleUrl: './prodi.component.css'  // Path ke file CSS untuk komponen ini
 })
-export class prodiComponent implements OnInit {  // Deklarasi komponen dengan mengimplementasikan lifecycle hook OnInit
-  prodi: any[] = [];  // Mendeklarasikan properti prodi yang akan menyimpan data yang diterima dari API
-  apiUrl = 'https://crud-express-seven.vercel.app/api/prodi';  // URL API yang digunakan untuk mendapatkan data prodi
+export class ProdiComponent implements OnInit {  // Deklarasi komponen dengan mengimplementasikan lifecycle hook OnInit
+  prodi: any[] = [];  // Mendeklarasikan properti fakultas yang akan menyimpan data yang diterima dari API
+  apiUrl = 'http://localhost:3000/api/prodi';  // URL API yang digunakan untuk mendapatkan data fakultas
   isLoading = true;  // Properti untuk status loading, digunakan untuk menunjukkan loader saat data sedang diambil
 
   prodiForm: FormGroup;  // Tambahkan untuk mengelola data formulir
@@ -27,20 +27,21 @@ export class prodiComponent implements OnInit {  // Deklarasi komponen dengan me
     // Inisialisasi form dengan kontrol nama dan singkatan
     this.prodiForm = this.fb.group({
       nama: [''],
-      singkatan: ['']
+      singkatan: [''],
+      fakultas: [''],
     });
   }
 
   ngOnInit(): void {  // Lifecycle hook ngOnInit dipanggil saat komponen diinisialisasi
-    this.getprodi();  // Memanggil method getprodi saat komponen diinisialisasi
+    this.getProdi();  // Memanggil method getFakultas saat komponen diinisialisasi
   }
 
-  getprodi(): void {  // Method untuk mengambil data prodi dari API
+  getProdi(): void {  // Method untuk mengambil data fakultas dari API
     // Mengambil data dari API menggunakan HttpClient
     this.http.get<any[]>(this.apiUrl).subscribe({
       next: (data) => {  // Callback untuk menangani data yang diterima dari API
-        this.prodi = data;  // Menyimpan data yang diterima ke dalam properti prodi
-        console.log('Data prodi:', this.prodi);  // Mencetak data prodi di console untuk debugging
+        this.prodi = data;  // Menyimpan data yang diterima ke dalam properti fakultas
+        console.log('Data Prodi:', this.prodi);  // Mencetak data fakultas di console untuk debugging
         this.isLoading = false;  // Mengubah status loading menjadi false, yang akan menghentikan tampilan loader
       },
       error: (err) => {  // Callback untuk menangani jika terjadi error saat mengambil data
@@ -50,19 +51,19 @@ export class prodiComponent implements OnInit {  // Deklarasi komponen dengan me
     });
   }
 
-  // Method untuk menambahkan prodi
-  addprodi(): void {
+  // Method untuk menambahkan fakultas
+  addProdi(): void {
     if (this.prodiForm.valid) {
       this.isSubmitting = true;  // Set status submitting
       this.http.post(this.apiUrl, this.prodiForm.value).subscribe({
         next: (response) => {
           console.log('Data berhasil ditambahkan:', response);
-          this.getprodi();  // Refresh data prodi
+          this.getProdi();  // Refresh data fakultas
           this.prodiForm.reset();  // Reset formulir
           this.isSubmitting = false;  // Reset status submitting
 
           // Tutup modal setelah data berhasil ditambahkan
-          const modalElement = document.getElementById('tambahprodiModal') as HTMLElement;
+          const modalElement = document.getElementById('tambahProdiModal') as HTMLElement;
           if (modalElement) {
             const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
             modalInstance.hide();

@@ -5,15 +5,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';  /
 import * as bootstrap from 'bootstrap';
 
 @Component({
-  selector: 'app-mahasiswa',  // Nama selector untuk komponen ini. Komponen akan digunakan di template dengan tag <app-mahasiswa></app-mahasiswa>
+  selector: 'app-mahasiswa',  // Nama selector untuk komponen ini. Komponen akan digunakan di template dengan tag <app-fakultas></app-fakultas>
   standalone: true,  // Menyatakan bahwa komponen ini adalah komponen standalone dan tidak membutuhkan module tambahan
   imports: [CommonModule, ReactiveFormsModule],  // Mengimpor CommonModule untuk memungkinkan penggunaan direktif Angular standar seperti *ngIf dan *ngFor di template
   templateUrl: './mahasiswa.component.html',  // Path ke file template HTML untuk komponen ini
   styleUrl: './mahasiswa.component.css'  // Path ke file CSS untuk komponen ini
 })
-export class mahasiswaComponent implements OnInit {  // Deklarasi komponen dengan mengimplementasikan lifecycle hook OnInit
-  mahasiswa: any[] = [];  // Mendeklarasikan properti mahasiswa yang akan menyimpan data yang diterima dari API
-  apiUrl = 'https://crud-express-seven.vercel.app/api/mahasiswa';  // URL API yang digunakan untuk mendapatkan data mahasiswa
+export class MahasiswaComponent implements OnInit {  // Deklarasi komponen dengan mengimplementasikan lifecycle hook OnInit
+  mahasiswa: any[] = [];  // Mendeklarasikan properti fakultas yang akan menyimpan data yang diterima dari API
+  apiUrl = 'http://localhost:3000/api/mahasiswa';  // URL API yang digunakan untuk mendapatkan data fakultas
   isLoading = true;  // Properti untuk status loading, digunakan untuk menunjukkan loader saat data sedang diambil
 
   mahasiswaForm: FormGroup;  // Tambahkan untuk mengelola data formulir
@@ -26,21 +26,25 @@ export class mahasiswaComponent implements OnInit {  // Deklarasi komponen denga
   constructor() {
     // Inisialisasi form dengan kontrol nama dan singkatan
     this.mahasiswaForm = this.fb.group({
+      npm: [''],
       nama: [''],
-      singkatan: ['']
+      jenis_kelamin: [''],
+      asal_sekolah: [''],
+      foto: [''],
+      prodi: [''],
     });
   }
 
   ngOnInit(): void {  // Lifecycle hook ngOnInit dipanggil saat komponen diinisialisasi
-    this.getmahasiswa();  // Memanggil method getmahasiswa saat komponen diinisialisasi
+    this.getMahasiswa();  // Memanggil method getFakultas saat komponen diinisialisasi
   }
 
-  getmahasiswa(): void {  // Method untuk mengambil data mahasiswa dari API
+  getMahasiswa(): void {  // Method untuk mengambil data fakultas dari API
     // Mengambil data dari API menggunakan HttpClient
     this.http.get<any[]>(this.apiUrl).subscribe({
       next: (data) => {  // Callback untuk menangani data yang diterima dari API
-        this.mahasiswa = data;  // Menyimpan data yang diterima ke dalam properti mahasiswa
-        console.log('Data mahasiswa:', this.mahasiswa);  // Mencetak data mahasiswa di console untuk debugging
+        this.mahasiswa = data;  // Menyimpan data yang diterima ke dalam properti fakultas
+        console.log('Data Mahasiswa:', this.mahasiswa);  // Mencetak data fakultas di console untuk debugging
         this.isLoading = false;  // Mengubah status loading menjadi false, yang akan menghentikan tampilan loader
       },
       error: (err) => {  // Callback untuk menangani jika terjadi error saat mengambil data
@@ -50,19 +54,19 @@ export class mahasiswaComponent implements OnInit {  // Deklarasi komponen denga
     });
   }
 
-  // Method untuk menambahkan mahasiswa
-  addmahasiswa(): void {
+  // Method untuk menambahkan fakultas
+  addMahasiswa(): void {
     if (this.mahasiswaForm.valid) {
       this.isSubmitting = true;  // Set status submitting
       this.http.post(this.apiUrl, this.mahasiswaForm.value).subscribe({
         next: (response) => {
           console.log('Data berhasil ditambahkan:', response);
-          this.getmahasiswa();  // Refresh data mahasiswa
+          this.getMahasiswa();  // Refresh data fakultas
           this.mahasiswaForm.reset();  // Reset formulir
           this.isSubmitting = false;  // Reset status submitting
 
           // Tutup modal setelah data berhasil ditambahkan
-          const modalElement = document.getElementById('tambahmahasiswaModal') as HTMLElement;
+          const modalElement = document.getElementById('tambahMahasiswaModal') as HTMLElement;
           if (modalElement) {
             const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
             modalInstance.hide();
