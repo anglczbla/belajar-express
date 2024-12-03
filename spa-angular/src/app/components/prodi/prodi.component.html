@@ -1,54 +1,83 @@
-<div class="container my-5">
-    <h2>Data Prodi</h2>
+<div class="container mt-4">
+  <h2>Daftar Prodi</h2>
 
-    <!-- Card Container untuk menampilkan Data Prodi -->
-    <div class="row">
-        <!-- Card 1: Sistem Informasi -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Sistem Informasi</h5>
-                    <p class="card-text">Singkatan: SI</p>
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
+  <!-- Tombol untuk membuka modal -->
+  <button
+    type="button"
+    class="btn btn-primary mb-3"
+    data-bs-toggle="modal"
+    data-bs-target="#tambahProdiModal"
+  >
+    Tambah Prodi
+  </button>
 
-        <!-- Card 2: Teknik Informatika -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Teknik Informatika</h5>
-                    <p class="card-text">Singkatan: TI</p>
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
+  <!-- Modal Tambah Prodi -->
+  <div
+    class="modal fade"
+    id="tambahProdiModal"
+    tabindex="-1"
+    aria-labelledby="tambahProdiModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahProdiModalLabel">
+            Tambah Prodi
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-
-        <!-- Card 3: Manajemen Informatika -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Manajemen Informatika</h5>
-                    <p class="card-text">Singkatan: MI</p>
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                </div>
+        <div class="modal-body">
+          <form [formGroup]="ProdiForm" (ngSubmit)="addProdi()">
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama Prodi</label>
+              <input
+                id="nama"
+                type="text"
+                class="form-control"
+                formControlName="nama"
+              />
             </div>
-        </div>
-
-        <!-- Card 4: Rekayasa Perangkat Lunak -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Rekayasa Perangkat Lunak</h5>
-                    <p class="card-text">Singkatan: RPL</p>
-                    <a href="#" class="btn btn-primary">Edit</a>
-                    <a href="#" class="btn btn-danger">Delete</a>
-                </div>
+            <div class="mb-3">
+              <label for="singkatan" class="form-label">Singkatan</label>
+              <input
+                id="singkatan"
+                type="text"
+                class="form-control"
+                formControlName="singkatan"
+              />
             </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="isSubmitting"
+            >
+              {{ isSubmitting ? "Menyimpan..." : "Tambah Prodi" }}
+            </button>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Data Prodi -->
+  <table class="table table-bordered table-striped" *ngIf="!isLoading">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Singkatan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of Prodi">
+        <td>{{ item.nama }}</td>
+        <td>{{ item.singkatan }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

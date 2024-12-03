@@ -1,48 +1,83 @@
-<div class="container my-5">
-    <h2>Data Mahasiswa</h2>
+<div class="container mt-4">
+  <h2>Daftar  mahasiswa </h2>
 
-    <!-- Card Container untuk menampilkan Data Mahasiswa -->
-    <div class="row">
-        <!-- Card 1: Angelica Izabella -->
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Mahasiswa">
-                <div class="card-body">
-                    <h5 class="card-title">Angelica Izabella</h5>
-                    <p class="card-text">NPM: 2226240122</p>
-                    <p class="card-text">Jenis Kelamin: Perempuan</p>
-                    <p class="card-text">Prodi: Sistem Informasi</p>
-                    <a href="#" class="btn btn-primary">Lihat Detail</a>
-                </div>
-            </div>
-        </div>
+  <!-- Tombol untuk membuka modal -->
+  <button
+    type="button"
+    class="btn btn-primary mb-3"
+    data-bs-toggle="modal"
+    data-bs-target="#tambah mahasiswa Modal"
+  >
+    Tambah  mahasiswa 
+  </button>
 
-        <!-- Card 2: Mahasiswa Lain -->
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Mahasiswa">
-                <div class="card-body">
-                    <h5 class="card-title">Puspita Sari</h5>
-                    <p class="card-text">NPM: 2226240123</p>
-                    <p class="card-text">Jenis Kelamin: Perempuan</p>
-                    <p class="card-text">Prodi: Teknik Informatika</p>
-                    <a href="#" class="btn btn-primary">Lihat Detail</a>
-                </div>
-            </div>
+  <!-- Modal Tambah  mahasiswa  -->
+  <div
+    class="modal fade"
+    id="tambah mahasiswa Modal"
+    tabindex="-1"
+    aria-labelledby="tambah mahasiswa ModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambah mahasiswa ModalLabel">
+            Tambah  mahasiswa 
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-
-        <!-- Card 3: Mahasiswa Lain -->
-        <div class="col-md-4">
-            <div class="card">
-                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Mahasiswa">
-                <div class="card-body">
-                    <h5 class="card-title">Nabila</h5>
-                    <p class="card-text">NPM: 2226240124</p>
-                    <p class="card-text">Jenis Kelamin: Perempuan</p>
-                    <p class="card-text">Prodi: Informatika</p>
-                    <a href="#" class="btn btn-primary">Lihat Detail</a>
-                </div>
+        <div class="modal-body">
+          <form [formGroup]=" mahasiswa Form" (ngSubmit)="add mahasiswa ()">
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama  mahasiswa </label>
+              <input
+                id="nama"
+                type="text"
+                class="form-control"
+                formControlName="nama"
+              />
             </div>
+            <div class="mb-3">
+              <label for="singkatan" class="form-label">Singkatan</label>
+              <input
+                id="singkatan"
+                type="text"
+                class="form-control"
+                formControlName="singkatan"
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="isSubmitting"
+            >
+              {{ isSubmitting ? "Menyimpan..." : "Tambah  mahasiswa " }}
+            </button>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Data  mahasiswa  -->
+  <table class="table table-bordered table-striped" *ngIf="!isLoading">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Singkatan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of  mahasiswa ">
+        <td>{{ item.nama }}</td>
+        <td>{{ item.singkatan }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
