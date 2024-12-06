@@ -1,92 +1,107 @@
-import { CommonModule } from '@angular/common';  // Mengimpor CommonModule agar dapat menggunakan fitur-fitur dasar Angular seperti *ngIf dan *ngFor
-import { Component, OnInit, inject } from '@angular/core';  // Mengimpor dekorator Component, lifecycle hook OnInit, dan inject untuk injeksi HttpClient pada komponen standalone
-import { HttpClient } from '@angular/common/http';  // Mengimpor HttpClient untuk melakukan HTTP request
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';  // Tambahkan untuk menangani formulir
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 
 @Component({
-  selector: 'app-mahasiswa',  // Nama selector untuk komponen ini. Komponen akan digunakan di template dengan tag <app-fakultas></app-fakultas>
-  standalone: true,  // Menyatakan bahwa komponen ini adalah komponen standalone dan tidak membutuhkan module tambahan
-  imports: [CommonModule, ReactiveFormsModule],  // Mengimpor CommonModule untuk memungkinkan penggunaan direktif Angular standar seperti *ngIf dan *ngFor di template
-  templateUrl: './mahasiswa.component.html',  // Path ke file template HTML untuk komponen ini
-  styleUrl: './mahasiswa.component.css'  // Path ke file CSS untuk komponen ini
+  selector: 'app-mahasiswa',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './mahasiswa.component.html',
+  styleUrls: ['./mahasiswa.component.css']
 })
-export class MahasiswaComponent implements OnInit {  // Deklarasi komponen dengan mengimplementasikan lifecycle hook OnInit
-  mahasiswa: any[] = [];  // Mendeklarasikan properti fakultas yang akan menyimpan data yang diterima dari API
-  apiUrl = 'http://localhost:3000/api/mahasiswa';  // URL API yang digunakan untuk mendapatkan data fakultas
-  isLoading = true;  // Properti untuk status loading, digunakan untuk menunjukkan loader saat data sedang diambil
+export class MahasiswaComponent implements OnInit {
+  mahasiswa: any[] = []; // Menyimpan data mahasiswa
+  prodi: any[] = []; // Menyimpan data program studi untuk dropdown
+  jenisKelaminOptions: string[] = ['Laki-laki', 'Perempuan']; // Opsi jenis kelamin
+  apiMahasiswaUrl = 'https://crud-express-seven.vercel.app/api/mahasiswa'; // URL API untuk mengambil dan menambahkan data mahasiswa
+  apiProdiUrl = 'https://crud-express-seven.vercel.app/api/prodi'; // URL API untuk mengambil data prodi
+  isLoading = true; // Indikator loading data dari API
+  mahasiswaForm: FormGroup; // Form group untuk formulir reaktif mahasiswa
+  isSubmitting = false; // Indikator proses pengiriman data
 
-  mahasiswaForm: FormGroup;  // Tambahkan untuk mengelola data formulir
-  isSubmitting = false;  // Status untuk mencegah double submit
-
-  private http = inject(HttpClient);  // Menggunakan inject untuk mendapatkan instance HttpClient di dalam komponen standalone (untuk Angular versi terbaru yang mendukung pendekatan ini)
-
-  private fb = inject(FormBuilder);  // Inject FormBuilder untuk membuat FormGroup
+  private http = inject(HttpClient);
+  private fb = inject(FormBuilder);
 
   constructor() {
-    // Inisialisasi form dengan kontrol nama dan singkatan
     this.mahasiswaForm = this.fb.group({
       npm: [''],
       nama: [''],
+      prodi_id: [null],
       jenis_kelamin: [''],
-      asal_sekolah: [''],
-      foto: [''],
-      prodi: [''],
+      asal_sekolah: ['']
     });
   }
 
-  ngOnInit(): void {  // Lifecycle hook ngOnInit dipanggil saat komponen diinisialisasi
-    this.getMahasiswa();  // Memanggil method getFakultas saat komponen diinisialisasi
+  ngOnInit(): void {
+    this.getMahasiswa();
+    this.getProdi();
   }
 
-  getMahasiswa(): void {  // Method untuk mengambil data fakultas dari API
-    // Mengambil data dari API menggunakan HttpClient
-    this.http.get<any[]>(this.apiUrl).subscribe({
-      next: (data) => {  // Callback untuk menangani data yang diterima dari API
-        this.mahasiswa = data;  // Menyimpan data yang diterima ke dalam properti fakultas
-        console.log('Data Mahasiswa:', this.mahasiswa);  // Mencetak data fakultas di console untuk debugging
-        this.isLoading = false;  // Mengubah status loading menjadi false, yang akan menghentikan tampilan loader
+  // Mengambil data mahasiswa
+  getMahasiswa(): void {
+    this.http.get<any[]>(this.apiMahasiswaUrl).subscribe({
+      next: (data) => {
+        this.mahasiswa = data;
+        this.isLoading = false;
       },
-      error: (err) => {  // Callback untuk menangani jika terjadi error saat mengambil data
-        console.error('Error fetching mahasiswa data:', err);  // Mencetak error di console untuk debugging
-        this.isLoading = false;  // Tetap mengubah status loading menjadi false meskipun terjadi error, untuk menghentikan loader
-      },
+      error: (err) => {
+        console.error('Error fetching mahasiswa data:', err);
+        this.isLoading = false;
+      }
     });
   }
 
-  // Method untuk menambahkan fakultas
+  // Mengambil data program studi untuk dropdown
+  getProdi(): void {
+    this.http.get<any[]>(this.apiProdiUrl).subscribe({
+      next: (data) => {
+        this.prodi = data;
+      },
+      error: (err) => {
+        console.error('Error fetching prodi data:', err);
+      }
+    });
+  }
+
+  // Menambahkan mahasiswa
   addMahasiswa(): void {
     if (this.mahasiswaForm.valid) {
-      this.isSubmitting = true;  // Set status submitting
-      this.http.post(this.apiUrl, this.mahasiswaForm.value).subscribe({
+      this.isSubmitting = true;
+      this.http.post(this.apiMahasiswaUrl, this.mahasiswaForm.value).subscribe({
         next: (response) => {
-          console.log('Data berhasil ditambahkan:', response);
-          this.getMahasiswa();  // Refresh data fakultas
-          this.mahasiswaForm.reset();  // Reset formulir
-          this.isSubmitting = false;  // Reset status submitting
+          console.log('Mahasiswa berhasil ditambahkan:', response);
+          this.getMahasiswa();
+          this.mahasiswaForm.reset();
+          this.isSubmitting = false;
 
           // Tutup modal setelah data berhasil ditambahkan
           const modalElement = document.getElementById('tambahMahasiswaModal') as HTMLElement;
           if (modalElement) {
             const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
             modalInstance.hide();
-
-            // Hapus elemen backdrop jika ada
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-              backdrop.remove();
-            }
-
-            // Pulihkan scroll pada body
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
           }
         },
         error: (err) => {
           console.error('Error menambahkan mahasiswa:', err);
           this.isSubmitting = false;
+        }
+      });
+    }
+  }
+
+  // Menghapus mahasiswa
+  deleteMahasiswa(_id: string): void {
+    if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+      this.http.delete(`${this.apiMahasiswaUrl}/${_id}`).subscribe({
+        next: () => {
+          console.log(`Mahasiswa dengan ID ${_id} berhasil dihapus`);
+          this.getMahasiswa();
         },
+        error: (err) => {
+          console.error('Error menghapus mahasiswa:', err);
+        }
       });
     }
   }
